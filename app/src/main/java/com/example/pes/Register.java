@@ -26,7 +26,6 @@ import java.net.URLEncoder;
 
 public class Register extends AppCompatActivity {
 
-    private static final String TAG = "Login";
     String BASE_URL = String.format("http://10.0.2.2:9000/Application/registerAndroid");
     private EditText registerName;
     private EditText registerPassword;
@@ -86,7 +85,7 @@ public class Register extends AppCompatActivity {
                     urlConnection.setDoOutput(true);
                     urlConnection.connect();
 
-                    String urlParameters = "nameUser=" +name +"&edad"+edad+ "&password="+password;
+                    String urlParameters = "nameUser=" +name +"&edad="+edad+ "&password="+password;
                     Log.i("parametros enviados register ", urlParameters);
 
                     OutputStream os=urlConnection.getOutputStream();
@@ -99,50 +98,23 @@ public class Register extends AppCompatActivity {
 
                     int responseCode = urlConnection.getResponseCode();
                     Log.i("serverTest", "Response Code: " + responseCode);
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        stream = urlConnection.getInputStream();
-                        BufferedReader reader = null;
-                        StringBuilder response = new StringBuilder();
-                        reader = new BufferedReader(new InputStreamReader(stream));
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            response.append(line);
-                        }
-                        String result = response.toString();
-                        urlConnection.disconnect();
 
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Log.i("serverTest", result);
-                                if (result.contains("success")) {
-                                    Toast.makeText(Register.this, "Registrado correctamente", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(Register.this, Menu.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(Register.this, "Error en el registro: " + result, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Toast.makeText(Register.this, "No autorizado. Verifica tus credenciales.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Toast.makeText(Register.this, "Recurso no encontrado en el servidor.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } else {
-                        handler.post(new Runnable() {
-                            public void run() {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            if (responseCode == 201) {
+                                Toast.makeText(Register.this, "Registrado correctamente", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Register.this, Menu.class);
+                                startActivity(intent);
+                                finish();
+                            } else if (responseCode == 409) {
+                                Toast.makeText(Register.this, "Nombre existente.", Toast.LENGTH_SHORT).show();
+                            } else {
                                 Toast.makeText(Register.this, "Error en el servidor. Código: " + responseCode, Toast.LENGTH_SHORT).show();
                             }
-                        });
-                    }
+                        }
+                    });
+
+                    urlConnection.disconnect();
                 } catch (Exception e) {
                     e.printStackTrace();
                     handler.post(new Runnable() {

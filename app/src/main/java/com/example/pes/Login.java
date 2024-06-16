@@ -26,7 +26,6 @@ import java.net.URLEncoder;
 
 public class Login extends AppCompatActivity {
 
-    private static final String TAG = "Login";
     String BASE_URL = String.format("http://10.0.2.2:9000/Application/loginAndroid");
     private EditText loginName;
     private EditText loginPassword;
@@ -77,31 +76,19 @@ public class Login extends AppCompatActivity {
                     os.close();
 
                     int responseCode = urlConnection.getResponseCode();
-                    StringBuilder response = new StringBuilder();
-
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-
-                        stream = urlConnection.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            response.append(line);
-                        }
-                        urlConnection.disconnect();
-                    }
-                        String result = response.toString();
-
+                    Log.i("serverTest", "Response Code: " + responseCode);
 
                     handler.post(new Runnable() {
                         public void run() {
-                            if(responseCode==HttpURLConnection.HTTP_OK){
-                                Log.i("serverTest", result);
+                            if(responseCode==200){
                                 Toast.makeText(Login.this, "Logueado correctamente", Toast.LENGTH_SHORT).show();
                                 Intent intent=new Intent(Login.this, Menu.class);
                                 startActivity(intent);
                                 finish();
-                            }else{
-                                Toast.makeText(Login.this, "Error en el servidor: " + responseCode, Toast.LENGTH_SHORT).show();
+                            }else if(responseCode==401){
+                                Toast.makeText(Login.this, "Nombre o contraseña incorrecta " , Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(Login.this, "Error en el servidor: "+ responseCode , Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
