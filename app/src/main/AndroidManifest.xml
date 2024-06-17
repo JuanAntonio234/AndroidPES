@@ -16,6 +16,15 @@
         android:theme="@style/Theme.PES"
         tools:targetApi="31">
         <activity
+            android:name=".ObtenerDatosConductor"
+            android:exported="false" />
+        <activity
+            android:name=".DatosCoche"
+            android:exported="false" />
+        <activity
+            android:name=".CochesConductor"
+            android:exported="false" />
+        <activity
             android:name=".Menu"
             android:exported="false"
             android:theme="@style/Theme.PES" />

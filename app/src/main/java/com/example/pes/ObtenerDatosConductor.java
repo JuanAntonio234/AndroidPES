@@ -1,20 +1,29 @@
 package com.example.pes;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import android.os.Handler;
+import android.util.Log;
+import java.net.HttpURLConnection;
+import java.io.BufferedReader;
 
-public class ObtenerTodosMisCoches extends AppCompatActivity {
+
+public class ObtenerDatosConductor extends AppCompatActivity {
 
     String BASE_URL=String.format("http://10.0.2.2:9000/Application/datosConductor");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_obtener_todos_mis_coches);
+        setContentView(R.layout.activity_obtener_datos_conductor);
     }
-/*
+
     public void  obtenerDatosCoche(View view){
         new Thread(new Runnable() {
             InputStream stream = null;
@@ -30,8 +39,8 @@ public class ObtenerTodosMisCoches extends AppCompatActivity {
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestMethod("GET");
                     urlConnection.setReadTimeout(10000 );
-                    urlConnection.setConnectTimeout(15000 /* milliseconds*/ /*);*/
-             /*       urlConnection.setDoInput(true);
+                    urlConnection.setConnectTimeout(15000 /* milliseconds*/ );
+                    urlConnection.setDoInput(true);
                     urlConnection.connect();
 
                     stream = urlConnection.getInputStream();
@@ -56,11 +65,16 @@ public class ObtenerTodosMisCoches extends AppCompatActivity {
                         }
                     });
 */
-     /*           } catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }).start();
     }
-*/
+
+    public void returnToMenuOnClick(View view){
+        Intent intent=new Intent(ObtenerDatosConductor.this, Menu.class);
+        startActivity(intent);
+        finish();
+    }
 }
