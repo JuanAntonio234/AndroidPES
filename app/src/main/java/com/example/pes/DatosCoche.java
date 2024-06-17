@@ -29,24 +29,23 @@ import java.net.URLEncoder;
 public class DatosCoche extends AppCompatActivity {
 
     private Button obtenerMarcaCoche;
-    private EditText marcaCoche;
+    private EditText marcaCocheET;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_datos_coche);
-        marcaCoche=findViewById(R.id.marcaCoche);
+        marcaCocheET=findViewById(R.id.marcaCoche);
         obtenerMarcaCoche = findViewById(R.id.obtenerDatosCocheBtn);
 
         obtenerMarcaCoche.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String marca = marcaCoche.getText().toString();
+                String marca = marcaCocheET.getText().toString();
                 obtenerDatosCoche(marca);
-
             }
         });
+    }
 
-        }
     public void  obtenerDatosCoche(String marca){
         new Thread(new Runnable() {
             InputStream stream = null;
@@ -54,7 +53,6 @@ public class DatosCoche extends AppCompatActivity {
             public void run() {
 
                 try {
-                   // String carName = "Peugeot";
                     String BASE_URL = "http://10.0.2.2:9000/Application/datosCoche";
                     String urlStr = BASE_URL + "?carName=" + URLEncoder.encode(marca, "UTF-8");
                     URL url = new URL(urlStr);
@@ -76,7 +74,6 @@ public class DatosCoche extends AppCompatActivity {
                     String result = sb.toString();
                     urlConnection.disconnect();
 
-                    //Codi correcte
                     Log.i("serverTest", result);
                     handler.post(new Runnable() {
                         public void run() {
