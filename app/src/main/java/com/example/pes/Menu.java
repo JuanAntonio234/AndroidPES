@@ -12,11 +12,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class Menu extends AppCompatActivity {
 
+    private String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_menu);
+        Intent intent=getIntent();
+        name=intent.getStringExtra("name");
     }
     public void goDatosCocheOnClick(View view){
         Intent intent=new Intent(Menu.this, DatosCoche.class);
@@ -24,10 +27,12 @@ public class Menu extends AppCompatActivity {
     }
     public void goCochesConductorOnClick(View view){
         Intent intent=new Intent(Menu.this, CochesConductor.class);
+        intent.putExtra("name",name);
         startActivity(intent);
     }
     public void goDatosConductoOnClick(View view){
         Intent intent=new Intent(Menu.this, ObtenerDatosConductor.class);
+        intent.putExtra("name",name);
         startActivity(intent);
     }
 }

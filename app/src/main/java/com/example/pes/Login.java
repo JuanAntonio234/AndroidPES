@@ -77,8 +77,9 @@ public class Login extends AppCompatActivity {
                         public void run() {
                             if(responseCode==200){
                                 Toast.makeText(Login.this, "Logueado correctamente", Toast.LENGTH_SHORT).show();
-                                Intent intent=new Intent(Login.this, Menu.class);
-                                startActivity(intent);
+                                Intent menuActivityIntent = new Intent(Login.this, Menu.class);
+                                menuActivityIntent.putExtra("name", name);
+                                startActivity(menuActivityIntent);
                                 finish();
                             }else if(responseCode==401){
                                 Toast.makeText(Login.this, "Nombre o contraseña incorrecta " , Toast.LENGTH_SHORT).show();

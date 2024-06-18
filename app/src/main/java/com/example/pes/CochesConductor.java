@@ -6,13 +6,13 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,6 +25,7 @@ public class CochesConductor extends AppCompatActivity {
 
     private Button obtenerCochesConductorBtn;
     private TextView obtenerCochesConductorTV;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +33,22 @@ public class CochesConductor extends AppCompatActivity {
         setContentView(R.layout.activity_coches_conductor);
         obtenerCochesConductorTV=findViewById(R.id.textViewObtenerCochesConductor);
         obtenerCochesConductorBtn=findViewById(R.id.obtenerCochesConductorBtn);
+        name= getIntent().getStringExtra("name");
 
         obtenerCochesConductorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String conductor="w";
-                obtenerCochesConductor(conductor);
+                obtenerCochesConductor(name);
             }
         });
     }
 
-    public void  obtenerCochesConductor(String nameDriver){
-        new Thread(new Runnable() {
+    public void obtenerCochesConductor(String nameDriver){
+      /*  new Thread(new Runnable() {
             InputStream stream = null;
             Handler handler = new Handler();
-            public void run() {
 
+            public void run() {
                 try {
                     String BASE_URL = "http://10.0.2.2:9000/Application/cochesConductor";
                     String urlStr = BASE_URL + "?nameDriver=" + URLEncoder.encode(nameDriver, "UTF-8");
@@ -56,13 +57,13 @@ public class CochesConductor extends AppCompatActivity {
 
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestMethod("GET");
-                    urlConnection.setReadTimeout(10000 );
-                    urlConnection.setConnectTimeout(15000  );
+                    urlConnection.setReadTimeout(10000);
+                    urlConnection.setConnectTimeout(15000);
                     urlConnection.setDoInput(true);
                     urlConnection.connect();
 
                     stream = urlConnection.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));;
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                     StringBuilder sb = new StringBuilder();
                     String line = null;
                     while ((line = reader.readLine()) != null) {
@@ -85,26 +86,44 @@ public class CochesConductor extends AppCompatActivity {
         }).start();
     }
 
-    public void procesarRespuesta(String jsonResponse){
+    public void procesarRespuesta(String jsonResponse) {
         try {
-            JSONObject jsonObject=new JSONObject(jsonResponse);
-            if (jsonObject.has("error")) {
-                String error = jsonObject.getString("error");
-                Log.e("serverTest", error);
-                Toast.makeText(CochesConductor.this, error, Toast.LENGTH_SHORT).show();
-            }else {
-                String name = jsonObject.getString("name");
-                int edad = jsonObject.getInt("edad");
-                int numCoches = jsonObject.getInt("numcoches");
+            StringBuilder resultado = new StringBuilder();
 
-                TextView obtenerMisDatosTV = (TextView) findViewById(R.id.textViewObtenerMisDatos);
-                String resultado = "Nombre: " + name + "\nEdad: " + edad + "\nNúmero de ccoches: " + numCoches;
+            if (jsonResponse.startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(jsonResponse);
 
-                obtenerMisDatosTV.setText(resultado);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String marca = jsonObject.getString("marca");
+                    String matricula = jsonObject.getString("matricula");
+                    String tipo = jsonObject.getString("tipo");
+
+                    resultado.append("Marca: ").append(marca)
+                            .append("\nMatricula: ").append(matricula)
+                            .append("\nTipo: ").append(tipo)
+                            .append("\n\n");
+                }
+
+                TextView obtenerMisDatosTV = findViewById(R.id.textViewObtenerMisDatos);
+                obtenerMisDatosTV.setText(resultado.toString());
+            } else {
+                JSONObject jsonObject = new JSONObject(jsonResponse);
+
+                if (jsonObject.has("error")) {
+                    String error = jsonObject.getString("error");
+                    Log.e("serverTest", error);
+                    Toast.makeText(CochesConductor.this, error, Toast.LENGTH_SHORT).show();
+                } else if (jsonObject.has("mensaje")) {
+                    String mensaje = jsonObject.getString("mensaje");
+                    Log.i("serverTest", mensaje);
+                    Toast.makeText(CochesConductor.this, mensaje, Toast.LENGTH_SHORT).show();
+                }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
+            Toast.makeText(CochesConductor.this, "Error procesando la respuesta", Toast.LENGTH_SHORT).show();
+        }*/
     }
 
     public void returnToMenuOnClick(View view){

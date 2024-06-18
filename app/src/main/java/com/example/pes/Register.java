@@ -103,8 +103,9 @@ public class Register extends AppCompatActivity {
                         public void run() {
                             if (responseCode == 201) {
                                 Toast.makeText(Register.this, "Registrado correctamente", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(Register.this, Menu.class);
-                                startActivity(intent);
+                                Intent menuActivityIntent = new Intent(Register.this, Menu.class);
+                                menuActivityIntent.putExtra("name", name);
+                                startActivity(menuActivityIntent);
                                 finish();
                             } else if (responseCode == 409) {
                                 Toast.makeText(Register.this, "Nombre existente.", Toast.LENGTH_SHORT).show();

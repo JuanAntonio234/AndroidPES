@@ -41,7 +41,13 @@ public class DatosCoche extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String marca = marcaCocheET.getText().toString();
-                obtenerDatosCoche(marca);
+                if((marca.isEmpty())||(marca.equals("Marca"))){
+                    Toast.makeText(DatosCoche.this, "Introduce una marca", Toast.LENGTH_SHORT).show();
+                }else if((!marca.equals("Peugeot"))&&!marca.equals("Ford")&&!marca.equals("Citroen")&&!marca.equals("Ferrari")){
+                    Toast.makeText(DatosCoche.this, "No hay coches disponibles de esa marca", Toast.LENGTH_SHORT).show();
+                }else{
+                    obtenerDatosCoche(marca);
+                }
             }
         });
     }

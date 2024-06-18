@@ -24,19 +24,19 @@ import java.net.URLEncoder;
 
 public class ObtenerDatosConductor extends AppCompatActivity {
 
-    private EditText q ;
+    private String name;
     private Button obtenerDatosConductorBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_obtener_datos_conductor);
         obtenerDatosConductorBtn=findViewById(R.id.obtenerDatosConductorBtn);
+        name= getIntent().getStringExtra("name");
 
         obtenerDatosConductorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nombreConductor="w";
-                obtenerDatosConductor(nombreConductor);
+                obtenerDatosConductor(name);
             }
         });
     }
